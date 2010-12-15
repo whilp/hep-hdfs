@@ -34,7 +34,7 @@
 </property>
 <property>
   <name>dfs.data.dir</name>
-  <value>/data</value>
+  <value>/data/hdfs</value>
 </property>
 <property>
   <name>dfs.datanode.handler.count</name>
@@ -42,7 +42,7 @@
 </property>
 <property>
   <name>hadoop.tmp.dir</name>
-  <value>/data/tmp</value>
+  <value>/data/hdfs/tmp</value>
 </property>
 <property>
   <name>dfs.block.size</name>
@@ -71,7 +71,7 @@
 </property>
 <property>
   <name>fs.checkpoint.dir</name>
-  <value>/data/checkpoint</value>
+  <value>/data/hdfs/checkpoint</value>
 </property>
 <property>
   <name>mapred.map.tasks</name>
