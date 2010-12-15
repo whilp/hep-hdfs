@@ -57,3 +57,10 @@ export HADOOP_PID_DIR=/var/run/hadoop
 
 # The scheduling priority for daemon processes.  See 'man nice'.
 # export HADOOP_NICENESS=10
+
+export HADOOP_NAMEPORT=9000
+export HADOOP_DATADIR=/data/hdfs
+export HADOOP_LOG=/data/hdfs/logs
+export HADOOP_SCRATCH=/data/hdfs/scratch
+export POOL_DATA_SIZE_MIN=300
+
