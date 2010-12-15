@@ -12,7 +12,7 @@ export JAVA_HOME=/usr/java/latest
 HADOOP_CLASSPATH=$HADOOP_CONF_DIR:$(build-classpath hadoop)
 
 # The maximum amount of heap to use, in MB. Default is 1000.
-# export HADOOP_HEAPSIZE=2000
+export HADOOP_HEAPSIZE=8192
 
 # Java JMX options.
 # Leave JMX disabled by default.
