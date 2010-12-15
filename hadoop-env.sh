@@ -61,6 +61,6 @@ export HADOOP_PID_DIR=/var/run/hadoop
 export HADOOP_NAMEPORT=9000
 export HADOOP_DATADIR=/data/hdfs
 export HADOOP_LOG=/data/hdfs/logs
-export HADOOP_SCRATCH=/data/hdfs/scratch
+export HADOOP_SCRATCH=/data/hdfs/tmp
 export POOL_DATA_SIZE_MIN=300
 
