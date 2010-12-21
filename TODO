@@ -1,0 +1,6 @@
+syslog: bestman
+syslog: xrootd
+syslog: gridftp
+IO validation: xrootd
+stress
+scale
