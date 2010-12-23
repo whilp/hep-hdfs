@@ -6,7 +6,7 @@
 <configuration>
   <property>
     <name>fs.default.name</name>
-    <value>hdfs://cmshdfs01:9000</value>
+    <value>hdfs://cmshdfs01.hep.wisc.edu:9000/</value>
   </property>
   <property>
     <name>mapred.job.tracker</name>
@@ -54,7 +54,7 @@
 </property>
 <property>
   <name>dfs.hosts.exclude</name>
-  <value>/etc/hadoop/hosts_exclude</value>
+  <value>/etc/hadoop/conf/hosts_exclude</value>
 </property>
 <property>
   <name>session.id</name>
