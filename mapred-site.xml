@@ -9,7 +9,6 @@
     <value>cmshdfs01.hep.wisc.edu:9000</value>
   </property>
   <property>
-  <property>
     <name>mapred.map.tasks</name>
     <value>7919</value>
   </property>
