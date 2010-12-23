@@ -6,7 +6,7 @@
 <configuration>
   <property>
     <name>mapred.job.tracker</name>
-    <value>@HADOOP_TRACKER@:@HADOOP_TRACKERPORT@</value>
+    <value>cmshdfs01.hep.wisc.edu:9000</value>
   </property>
   <property>
   <property>
