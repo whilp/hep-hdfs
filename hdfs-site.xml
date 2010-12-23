@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://cmshdfs01.hep.wisc.edu:9000/</value>
+  </property>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>node003:9001</value>
+  </property>
+  <property>
+    <name>dfs.replication</name>
+    <value>2</value>
+  </property>
+<property>
+  <name>dfs.replication.max</name>
+  <value>512</value>
+</property>
+<property>
+  <name>dfs.replication.min</name>
+  <value>1</value>
+</property>
+<property>
+  <name>dfs.datanode.du.reserved</name>
+  <value>10000000000</value>
+</property>
+<property>
+  <name>dfs.balance.bandwidthPerSec</name>
+  <value>2000000000</value>
+</property>
+<property>
+  <name>dfs.data.dir</name>
+  <value>/data/hdfs</value>
+</property>
+<property>
+  <name>dfs.datanode.handler.count</name>
+  <value>10</value>
+</property>
+<property>
+  <name>hadoop.tmp.dir</name>
+  <value>/data/hdfs/tmp</value>
+</property>
+<property>
+  <name>dfs.block.size</name>
+  <value>134217728</value>
+</property>
+<property>
+  <name>dfs.umask</name>
+  <value>002</value>
+</property>
+<property>
+  <name>dfs.hosts.exclude</name>
+  <value>/etc/hadoop/conf/hosts_exclude</value>
+</property>
+<property>
+  <name>session.id</name>
+  <value>Hadoop</value>
+  <description>Session ID for the JMX bean - otherwise, it's set to something random and we can't query it in Nagios.</description>
+</property>
+<property>
+  <name>dfs.namenode.handler.count</name>
+  <value>40</value>
+</property>
+<property>
+  <name>dfs.namenode.logging.level</name>
+  <value>all</value>
+</property>
+<property>
+  <name>fs.checkpoint.dir</name>
+  <value>/data/hdfs/checkpoint</value>
+</property>
+<property>
+  <name>mapred.map.tasks</name>
+  <value>7919</value>
+</property>
+<property>
+  <name>mapred.reduce.tasks</name>
+  <value>1543</value>
+</property>
+<property>
+  <name>mapred.tasktracker.map.tasks.maximum</name>
+  <value>4</value>
+</property>
+<property>
+  <name>mapred.tasktracker.reduce.tasks.maximum</name>
+  <value>4</value>
+</property>
+<property>
+  <name>tasktracker.http.threads</name>
+  <value>50</value>
+  <description>
+    Increased number of task tracker threads because we were running out.
+  </description>
+</property>
+<property>
+  <name>io.bytes.per.checksum</name>
+  <value>4096</value>
+</property>
+<property>
+  <name>hadoop.log.dir</name>
+  <value>/var/log/hadoop</value>
+</property>
+<property>
+  <name>topology.script.file.name</name>
+  <value></value>
+</property>
+<property>
+  <name>dfs.secondary.http.address</name>
+  <value>cmshdfs02:50090</value>
+  <description>
+    The secondary namenode http server address and port.
+    If the port is 0 then the server will start on a free port.
+  </description>
+</property>
+<property>
+  <name>dfs.http.address</name>
+  <value>cmshdfs01:50070</value>
+  <description>
+    The address and the base port where the dfs namenode web ui will listen on.
+    If the port is 0 then the server will start on a free port.
+  </description>
+</property>
+<property>
+  <name>fs.checkpoint.period</name>
+  <value>60</value>
+  <description>The number of seconds between two periodic checkpoints.
+  </description>
+</property>
+</configuration>
