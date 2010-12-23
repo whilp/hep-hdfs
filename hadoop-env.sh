@@ -10,7 +10,7 @@ export JAVA_HOME=/usr/java/latest
 
 # Extra Java CLASSPATH elements.  Optional.
 export HADOOP_CONF_DIR=/etc/hadoop
-HADOOP_CLASSPATH=$HADOOP_CONF_DIR:$(build-classpath hadoop)
+#HADOOP_CLASSPATH=$HADOOP_CONF_DIR:$(build-classpath hadoop)
 
 # The maximum amount of heap to use, in MB. Default is 1000.
 export HADOOP_HEAPSIZE=8192
