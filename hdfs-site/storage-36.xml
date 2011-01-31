@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+<property>
+  <name>dfs.data.dir</name>
+  <value>/data/01/hdfs,/data/02/hdfs,/data/03/hdfs,/data/04/hdfs,/data/05/hdfs,/data/06/hdfs,/data/07/hdfs,/data/08/hdfs,/data/09/hdfs,/data/10/hdfs,/data/11/hdfs,/data/12/hdfs,/data/13/hdfs,/data/14/hdfs,/data/15/hdfs,/data/16/hdfs,/data/17/hdfs,/data/18/hdfs,/data/19/hdfs,/data/20/hdfs,/data/21/hdfs,/data/22/hdfs,/data/23/hdfs,/data/24/hdfs,/data/25/hdfs,/data/26/hdfs,/data/27/hdfs,/data/28/hdfs,/data/29/hdfs,/data/30/hdfs,/data/31/hdfs,/data/32/hdfs,/data/33/hdfs,/data/34/hdfs,/data/35/hdfs,/data/36/hdfs</value>
+</property>
+<property>
+  <name>hadoop.tmp.dir</name>
+  <value>/scratch/hdfs/tmp</value>
+</property>
+</configuration>
