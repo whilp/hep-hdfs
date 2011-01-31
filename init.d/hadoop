@@ -62,18 +62,20 @@ start() {
 		return $RETVAL
 	    fi
 	else
-	    # A few sanity checks are needed before starting the data services
-	    POOL_DATA_SIZE=`/usr/bin/getPoolSize $HADOOP_DATADIR`
-	    if [ "$POOL_DATA_SIZE" == "0" ] ; then
-		/usr/bin/logger -p daemon.err -t hadoop-firstboot "Hadoop not configured because pool size was zero."
-		echo -n " ...$HADOOP_DATADIR has zero size?"
-		return 1
-	    fi
-	    if [ $POOL_DATA_SIZE -lt "$POOL_DATA_SIZE_MIN"  ] ; then
-		/usr/bin/logger -p daemon.err -t hadoop-firstboot "Hadoop not started because pool size was too small ($POOL_DATA_SIZE GB < ${POOL_DATA_SIZE_MIN} GB)"
-		echo -n " ...$HADOOP_DATADIR is too small ($POOL_DATA_SIZE GB < ${POOL_DATA_SIZE_MIN} GB)"
-		return 1
-	    fi
+		if [ -n "$HADOOP_CHECK_DATADIR" ]; then
+			# A few sanity checks are needed before starting the data services
+			POOL_DATA_SIZE=`/usr/bin/getPoolSize $HADOOP_DATADIR`
+			if [ "$POOL_DATA_SIZE" == "0" ] ; then
+			/usr/bin/logger -p daemon.err -t hadoop-firstboot "Hadoop not configured because pool size was zero."
+			echo -n " ...$HADOOP_DATADIR has zero size?"
+			return 1
+			fi
+			if [ $POOL_DATA_SIZE -lt "$POOL_DATA_SIZE_MIN"  ] ; then
+			/usr/bin/logger -p daemon.err -t hadoop-firstboot "Hadoop not started because pool size was too small ($POOL_DATA_SIZE GB < ${POOL_DATA_SIZE_MIN} GB)"
+			echo -n " ...$HADOOP_DATADIR is too small ($POOL_DATA_SIZE GB < ${POOL_DATA_SIZE_MIN} GB)"
+			return 1
+			fi
+		fi
 
 	    nohup su "$HADOOP_USER" -s /bin/sh -c "/usr/lib/hadoop/bin/hadoop-daemon.sh start datanode"
 	    RETVAL=$?
