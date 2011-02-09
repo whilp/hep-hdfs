@@ -49,7 +49,7 @@ start() {
             if [ ! -e $HADOOP_SCRATCH/dfs/name ] ; then
 		/usr/bin/hadoop namenode -format
 	    fi
-	    /usr/lib/hadoop/bin/hadoop-daemon.sh start namenode
+	    nohup su "$HADOOP_USER" -s /bin/sh -c "/usr/lib/hadoop/bin/hadoop-daemon.sh start namenode"
 	    RETVAL=$?
 	    if [ $RETVAL != 0 ] ; then
 		return $RETVAL
@@ -94,7 +94,7 @@ start() {
 stop() {
         # If namenode:
 	if [ `/bin/hostname -s` == "$HADOOP_NAMENODE" ] ; then
-	    /usr/lib/hadoop/bin/hadoop-daemon.sh stop namenode
+	    su "$HADOOP_USER" -s /bin/sh -c "/usr/lib/hadoop/bin/hadoop-daemon.sh stop namenode"
 	    RETVAL=$?
 	    if [ $RETVAL != 0 ] ; then
 		return $RETVAL
