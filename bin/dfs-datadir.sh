@@ -35,15 +35,17 @@ usage () {
     echo -e "  -S           don't issue start/stop commands if hdfs-site.xml changes"
     echo -e "  -m MOUNTS    mounts file (default: ${MOUNTS})"
     echo -e "  -p PIDFILE   PID file (default: ${PIDFILE})"
+    echo -e "  -r RECIPIENTS comma-delimited list of addresses to send report to (default: none)"
     echo -e "  -s HDFSSITE  path to hdfs-site.xml (default: ${HDFSSITE})"
     echo -e "  -t TEMPLATE  path to hdfs-site.xml template (default: ${TEMPLATE})"
 }
 
-while getopts Sm:p:s:t:hrv ARG; do
+while getopts Sm:p:r:s:t:hrv ARG; do
     case "${ARG}" in
         S) STARTSTOP=1;;
         m) MOUNTS="${OPTARG}";;
         p) PIDFILE="${OPTARG}";;
+        r) RECIPIENTS="${OPTARG}";;
         s) HDFSSITE="${OPTARG}";;
         t) TEMPLATE="${OPTARG}";;
         h) usage; exit 0;;
@@ -72,8 +74,9 @@ if [ -n "${LAST}" ]; then
     fi
 fi
 rm -f "${LOCKFILE}"; echo $$ >| "${LOCKFILE}"
-CLEANUP="${LOCKFILE}"
 trap "rm -f \${CLEANUP}" EXIT
+REPORT="$(mktemp "dfs-datanode-report.XXXXXx")
+CLEANUP="${LOCKFILE} ${REPORT}"
 
 DFSDATADIR=""
 for MOUNT in $(mounts "${DATAROOT}"); do
@@ -97,19 +100,22 @@ if [ -n "${STARTSTOP}" ]; then
 fi
 
 if ! cmp -s "${TMPFILE}" "${HDFSSITE}" 2>/dev/null; then
-    echo "=!=> '${HDFSSITE}' changed:"
-    diff -u "${HDFSSITE}" "${TMPFILE}"
+    echo "=!=> '${HDFSSITE}' changed:" >> "${REPORT}"
+    diff -u "${HDFSSITE}" "${TMPFILE}" >> "${REPORT}"
 
     mv "${TMPFILE}" "${HDFSSITE}"
     chmod 664  "${HDFSSITE}"
 
-    echo "=!=> Restarting datanode"
-    /etc/init.d/hadoop stop
+    echo "=!=> Restarting datanode" >> "${REPORT}"
+    /etc/init.d/hadoop stop >> "${REPORT}" 2>&1
     WAITED=0
     while kill -0 "$(< "${PIDFILE}")" 2>/dev/null; do
         sleep 1
         WAITED=$(($WAITED + 1))
         [ "${WAITED}" -gt 60 ] && break
     done
-    /etc/init.d/hadoop start
+    /etc/init.d/hadoop start >> "${REPORT}" 2>&1
+fi
+if [ -s "${REPORT}" -a -n "${RECIPIENTS}" ]; then
+    mail -s "HDFS datanode disk check" ${RECIPIENTS} < "${REPORT}"
 fi
