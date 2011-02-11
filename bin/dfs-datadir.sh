@@ -51,6 +51,23 @@ shift $(($OPTIND - 1))
 
 DATAROOT=${1:-/data}
 
+LOCKFILE=/var/lock/dfs-datadir.lock
+LAST=$(stat -c '%Y' "${LOCKFILE}" 2>/dev/null)
+if [ -n "${LAST}" ]; then
+    NOW=$(date "+%s")
+    if [ "$(($NOW - $LAST))" -gt 1200 ]; then
+        # BREAK
+        PID=$(< "${LOCKFILE}")
+        if kill -0 "${PID}" 2>/dev/null; then
+            echo "===> Breaking stale lock '${LOCKFILE}' owned by PID $PID"
+            kill -9 "${PID}"
+        fi
+    else
+        exit
+    fi
+fi
+rm -f "${LOCKFILE}"; echo $$ >| "${LOCKFILE}"
+
 DFSDATADIR=""
 for MOUNT in $(mounts "${DATAROOT}"); do
     if iswritable "${MOUNT}"; then
