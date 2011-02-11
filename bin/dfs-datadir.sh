@@ -86,14 +86,22 @@ TMPFILE="$(mktemp ${TEMPLATE}.XXXXXX)"
 CLEANUP="${CLEANUP} ${TMPFILE}"
 eval "echo \"$(< ${TEMPLATE})\"" > "${TMPFILE}"
 
+echo -e '\n\n<!-- Newline-delimited list of disks:' >> "${TMPFILE}"
+(echo "${DFSDATADIR}" | tr ',' '\n') >> "${TMPFILE}"
+echo "-->" >> "${TMPFILE}"
+
 if [ -n "${STARTSTOP}" ]; then
     exit 0
 fi
 
 if ! cmp -s "${TMPFILE}" "${HDFSSITE}" 2>/dev/null; then
+    echo "=!=> '${HDFSSITE}' changed:"
+    diff -u "${HDFSSITE}" "${TMPFILE}"
+
     mv "${TMPFILE}" "${HDFSSITE}"
     chmod 664  "${HDFSSITE}"
 
+    echo "=!=> Restarting datanode"
     /etc/init.d/hadoop stop
     WAITED=0
     while kill -0 "$(< "${PIDFILE}")" 2>/dev/null; do
