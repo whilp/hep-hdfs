@@ -2,6 +2,7 @@ MOUNTS=/proc/mounts
 HDFSSITE=/etc/hadoop/conf/hdfs-site.xml
 TEMPLATE="${HDFSSITE}.in"
 PIDFILE=/var/run/hadoop/hadoop-hadoop-datanode.pid
+STARTSTOP=
 TESTDIRS=""
 
 mounts () {
@@ -29,14 +30,16 @@ iswritable () {
 
 usage () {
     echo -e "Usage: $0 [options] <dataroot>"
+    echo -e "\t-S   don't issue start/stop commands if hdfs-site.xml changes"
     echo -e "\t-m   mounts file (default: ${MOUNTS})"
     echo -e "\t-p   PID file (default: ${PIDFILE})"
     echo -e "\t-s   path to hdfs-site.xml (default: ${HDFSSITE})"
     echo -e "\t-t   path to hdfs-site.xml template (default: ${TEMPLATE})"
 }
 
-while getopts m:p:s:t:hrv ARG; do
+while getopts Sm:p:s:t:hrv ARG; do
     case "${ARG}" in
+        S) STARTSTOP=1;;
         m) MOUNTS="${OPTARG}";;
         p) PIDFILE="${OPTARG}";;
         s) HDFSSITE="${OPTARG}";;
@@ -80,6 +83,10 @@ DFSDATADIR="${DFSDATADIR#,}"
 TMPFILE="$(mktemp ${TEMPLATE}.XXXXXX)"
 trap "rm -f ${TMPFILE}" ERR EXIT
 eval "echo \"$(< ${TEMPLATE})\"" > "${TMPFILE}"
+
+if [ -n "${STARTSTOP}" ]; then
+    exit 0
+fi
 
 if ! cmp -s "${TMPFILE}" "${HDFSSITE}" 2>/dev/null; then
     mv "${TMPFILE}" "${HDFSSITE}"
