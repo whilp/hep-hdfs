@@ -14,7 +14,7 @@ mounts () {
 
 iswritable () {
     TESTDIR=$(mktemp -p "${1%/}" -d ".datanode-disks-XXXXXXXX" 2>/dev/null)
-    trap "rm -rf ${TESTDIR}" RETURN ERR EXIT
+    CLEANUP="${CLEANUP} ${TESTDIR}"
 
     TESTFILE="${TESTDIR}/testfile"
 
@@ -70,6 +70,8 @@ if [ -n "${LAST}" ]; then
     fi
 fi
 rm -f "${LOCKFILE}"; echo $$ >| "${LOCKFILE}"
+CLEANUP="${LOCKFILE}"
+trap "rm -f \${CLEANUP}" ERR EXIT
 
 DFSDATADIR=""
 for MOUNT in $(mounts "${DATAROOT}"); do
@@ -81,7 +83,7 @@ done
 DFSDATADIR="${DFSDATADIR#,}"
 
 TMPFILE="$(mktemp ${TEMPLATE}.XXXXXX)"
-trap "rm -f ${TMPFILE}" ERR EXIT
+CLEANUP="${CLEANUP} ${TMPFILE}"
 eval "echo \"$(< ${TEMPLATE})\"" > "${TMPFILE}"
 
 if [ -n "${STARTSTOP}" ]; then
