@@ -1,1 +1,1 @@
-* * * * *	root	/etc/hadoop/conf.uwhep/bin/dfs-datadir.sh
+*/10 * * * *	root	/etc/hadoop/conf.uwhep/bin/dfs-datadir.sh | mail -s "HDFS datanode disk check" wcmaier@hep.wisc.edu
