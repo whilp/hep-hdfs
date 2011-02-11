@@ -117,5 +117,5 @@ if ! cmp -s "${TMPFILE}" "${HDFSSITE}" 2>/dev/null; then
     /etc/init.d/hadoop start >> "${REPORT}" 2>&1
 fi
 if [ -s "${REPORT}" -a -n "${RECIPIENTS}" ]; then
-    mail -s "HDFS datanode disk check" ${RECIPIENTS} < "${REPORT}"
+    mail -s "HDFS datanode disk check" ${RECIPIENTS}" < "${REPORT}"
 fi
