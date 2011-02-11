@@ -30,11 +30,11 @@ iswritable () {
 
 usage () {
     echo -e "Usage: $0 [options] <dataroot>"
-    echo -e "\t-S   don't issue start/stop commands if hdfs-site.xml changes"
-    echo -e "\t-m   mounts file (default: ${MOUNTS})"
-    echo -e "\t-p   PID file (default: ${PIDFILE})"
-    echo -e "\t-s   path to hdfs-site.xml (default: ${HDFSSITE})"
-    echo -e "\t-t   path to hdfs-site.xml template (default: ${TEMPLATE})"
+    echo -e "  -S           don't issue start/stop commands if hdfs-site.xml changes"
+    echo -e "  -m MOUNTS    mounts file (default: ${MOUNTS})"
+    echo -e "  -p PIDFILE   PID file (default: ${PIDFILE})"
+    echo -e "  -s HDFSSITE  path to hdfs-site.xml (default: ${HDFSSITE})"
+    echo -e "  -t TEMPLATE  path to hdfs-site.xml template (default: ${TEMPLATE})"
 }
 
 while getopts Sm:p:s:t:hrv ARG; do
