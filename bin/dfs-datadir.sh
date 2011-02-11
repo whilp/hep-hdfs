@@ -1,3 +1,5 @@
+#!/bin/sh
+
 MOUNTS=/proc/mounts
 HDFSSITE=/etc/hadoop/conf/hdfs-site.xml
 TEMPLATE="${HDFSSITE}.in"
