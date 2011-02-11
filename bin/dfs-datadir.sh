@@ -71,7 +71,7 @@ if [ -n "${LAST}" ]; then
 fi
 rm -f "${LOCKFILE}"; echo $$ >| "${LOCKFILE}"
 CLEANUP="${LOCKFILE}"
-trap "rm -f \${CLEANUP}" ERR EXIT
+trap "rm -f \${CLEANUP}" EXIT
 
 DFSDATADIR=""
 for MOUNT in $(mounts "${DATAROOT}"); do
