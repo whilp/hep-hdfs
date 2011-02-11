@@ -1,0 +1,30 @@
+#!/bin/bash
+
+/sbin/modprobe fuse
+
+export HADOOP_HOME=/usr/lib/hadoop-0.20
+
+if [ -f /etc/default/hadoop-0.20-fuse ] 
+	then . /etc/default/hadoop-0.20-fuse
+fi
+
+if [ -f $HADOOP_HOME/bin/hadoop-config.sh ] 
+	then . $HADOOP_HOME/bin/hadoop-config.sh  
+fi
+
+if [ "$LD_LIBRARY_PATH" = "" ]
+	then 
+        LD_LIBRARY_PATH=/usr/lib
+        for JVM_LIB in $(find "${JAVA_HOME}/jre/lib" -name libjvm.so); do
+            LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${JVM_LIB%/*}"
+        done
+
+fi
+export LD_LIBRARY_PATH
+for i in ${HADOOP_HOME}/*.jar ${HADOOP_HOME}/lib/*.jar
+        do CLASSPATH+=$i:
+done
+
+export PATH=$PATH:${HADOOP_HOME}/bin/
+
+env CLASSPATH=$CLASSPATH ${HADOOP_HOME}/bin/fuse_dfs $@
