@@ -5,10 +5,10 @@ PIDFILE=/var/run/hadoop/hadoop-hadoop-datanode.pid
 TESTDIRS=""
 
 mounts () {
-    local MOUNTS="${1:-${MOUNTS}}"
-    while read PART MNT OPTS FREQ PASS; do
+    DATAROOT=$1
+    sort -k2 "${MOUNTS}" | while read PART MNT OPTS FREQ PASS; do
         case "${MNT}" in "${DATAROOT%/}"/*) echo "${MNT}";; esac
-    done < "${MOUNTS}"
+    done
 }
 
 iswritable () {
@@ -49,7 +49,7 @@ while getopts m:p:s:t:hrv ARG; do
 done
 shift $(($OPTIND - 1))
 
-DATAROOT=$1
+DATAROOT=${1:-/data}
 
 DFSDATADIR=""
 for MOUNT in $(mounts "${DATAROOT}"); do
@@ -66,10 +66,14 @@ eval "echo \"$(< ${TEMPLATE})\"" > "${TMPFILE}"
 
 if ! cmp -s "${TMPFILE}" "${HDFSSITE}" 2>/dev/null; then
     mv "${TMPFILE}" "${HDFSSITE}"
+    chmod 664  "${HDFSSITE}"
 
     /etc/init.d/hadoop stop
+    WAITED=0
     while kill -0 "$(< "${PIDFILE}")" 2>/dev/null; do
         sleep 1
+        WAITED=$(($WAITED + 1))
+        [ "${WAITED}" -gt 60 ] && break
     done
     /etc/init.d/hadoop start
 fi
