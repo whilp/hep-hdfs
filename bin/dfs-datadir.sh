@@ -61,12 +61,12 @@ DATAROOT=${1:-/data}
 LOCKFILE=/var/lock/dfs-datadir.lock
 LAST=$(stat -c '%Y' "${LOCKFILE}" 2>/dev/null)
 if [ -n "${LAST}" ]; then
-    NOW=$(date "+%s")
+    NOW="$(date "+%s")"
     if [ "$(($NOW - $LAST))" -gt 1200 ]; then
         # BREAK
-        PID=$(< "${LOCKFILE}")
+        PID="$(< "${LOCKFILE}")"
         if kill -0 "${PID}" 2>/dev/null; then
-            echo "===> Breaking stale lock '${LOCKFILE}' owned by PID $PID"
+            echo "===> Breaking stale lock '${LOCKFILE}' owned by PID ${PID}"
             kill -9 "${PID}"
         fi
     else
@@ -74,9 +74,9 @@ if [ -n "${LAST}" ]; then
     fi
 fi
 rm -f "${LOCKFILE}"; echo $$ >| "${LOCKFILE}"
-trap "rm -f \${CLEANUP}" EXIT
-REPORT="$(mktemp "dfs-datanode-report.XXXXXx")
-CLEANUP="${LOCKFILE} ${REPORT}"
+trap "rm -rf \${CLEANUP}" EXIT
+TMP="$(mktemp -p ${TMPDIR:-/tmp} -d dfs-datanode-tmp.XXXXXXX)"
+CLEANUP="${LOCKFILE} ${TMP}"
 
 DFSDATADIR=""
 for MOUNT in $(mounts "${DATAROOT}"); do
@@ -87,8 +87,7 @@ for MOUNT in $(mounts "${DATAROOT}"); do
 done
 DFSDATADIR="${DFSDATADIR#,}"
 
-TMPFILE="$(mktemp ${TEMPLATE}.XXXXXX)"
-CLEANUP="${CLEANUP} ${TMPFILE}"
+TMPFILE="${TMP}/hdfs-site.xml"
 eval "echo \"$(< ${TEMPLATE})\"" > "${TMPFILE}"
 
 echo -e '\n\n<!-- Newline-delimited list of disks:' >> "${TMPFILE}"
@@ -99,6 +98,7 @@ if [ -n "${STARTSTOP}" ]; then
     exit 0
 fi
 
+REPORT="${TMP}/report"
 if ! cmp -s "${TMPFILE}" "${HDFSSITE}" 2>/dev/null; then
     echo "=!=> '${HDFSSITE}' changed:" >> "${REPORT}"
     diff -u "${HDFSSITE}" "${TMPFILE}" >> "${REPORT}"
@@ -106,7 +106,7 @@ if ! cmp -s "${TMPFILE}" "${HDFSSITE}" 2>/dev/null; then
     mv "${TMPFILE}" "${HDFSSITE}"
     chmod 664  "${HDFSSITE}"
 
-    echo "=!=> Restarting datanode" >> "${REPORT}"
+    echo '=!=> Restarting datanode' >> "${REPORT}"
     /etc/init.d/hadoop stop >> "${REPORT}" 2>&1
     WAITED=0
     while kill -0 "$(< "${PIDFILE}")" 2>/dev/null; do
@@ -117,5 +117,5 @@ if ! cmp -s "${TMPFILE}" "${HDFSSITE}" 2>/dev/null; then
     /etc/init.d/hadoop start >> "${REPORT}" 2>&1
 fi
 if [ -s "${REPORT}" -a -n "${RECIPIENTS}" ]; then
-    mail -s "HDFS datanode disk check" ${RECIPIENTS}" < "${REPORT}"
+    mail -s "HDFS datanode disk check" "${RECIPIENTS}" < "${REPORT}"
 fi
